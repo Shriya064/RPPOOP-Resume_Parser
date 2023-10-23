@@ -282,6 +282,18 @@ class HomeView(View):
         return render(request, "home.html")
 
 
+class DownloadPDFView(View):
+    def get(self, request):
+        file_path = "annotated_pdf.pdf"  # Path to the generated temp.pdf file
+
+        # Open the file in binary mode for reading
+        with open(file_path, "rb") as file:
+            response = HttpResponse(file.read(), content_type="application/pdf")
+            # Set the content-disposition header to force the browser to download the file
+            response["Content-Disposition"] = 'attachment; filename="annotated_pdf.pdf"'
+            return response
+        
+        
 class ResultView(View):
     def get(self, request):
         entities = request.session.get("entities", {})
