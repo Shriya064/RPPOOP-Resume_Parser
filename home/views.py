@@ -131,7 +131,7 @@ class HomeView(View):
             # Save the file to a temporary location
             file_path = os.path.join(settings.MEDIA_ROOT, uploaded_file.name)
             with open(file_path, "wb") as file:
-                for chunk in uploaded_file.chunks():
+                for chunk in uploaded_file.chunks():    
                     file.write(chunk)
 
             # Create the directory for saving images
@@ -294,17 +294,6 @@ class ResultView(View):
         return render(request, "result.html", {"entities": entities, "images": images})
 
 
-class DownloadPDFView(View):
-    def get(self, request):
-        file_path = "annotated_pdf.pdf"  # Path to the generated temp.pdf file
-
-        # Open the file in binary mode for reading
-        with open(file_path, "rb") as file:
-            response = HttpResponse(file.read(), content_type="application/pdf")
-            # Set the content-disposition header to force the browser to download the file
-            response["Content-Disposition"] = 'attachment; filename="annotated_pdf.pdf"'
-            return response
-
 
 
 class SearchView(View):
@@ -314,7 +303,7 @@ class SearchView(View):
 
         if skill:
             entities = Entity.objects.filter(label="SKILL", text__icontains=skill)
-            pdf_ids = entities.values_list("pdf_id", flat=True)
+            pdf_ids = entities.values_list("pdf_id", flat=True) # 1-D array
             pdfs = PDF.objects.filter(pk__in=pdf_ids)
 
             for pdf in pdfs:
