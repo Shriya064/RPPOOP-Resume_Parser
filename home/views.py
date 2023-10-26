@@ -7,6 +7,7 @@ import spacy
 from spacy.lang.en.stop_words import STOP_WORDS
 import os
 import re
+import csv
 
 
 nlp = spacy.load("en_core_web_lg")
@@ -349,9 +350,37 @@ class SearchView(View):
 
                 results.append(result)
 
+                csv_filename = "results.csv"
+
+                # Define the CSV header
+                header = ["pdf_name", "skills", "name", "email", "mobile"]
+
+                # Open the CSV file for writing
+                with open(csv_filename, 'w', newline='') as csvfile:
+                    writer = csv.DictWriter(csvfile, fieldnames=header)
+
+                    # Write the header
+                    writer.writeheader()
+
+                    # Write the results
+                    for result in results:
+                        result["skills"] = list(result["skills"])
+                        writer.writerow(result)
+
+
         context = {"results": results, "skill": skill}
         return render(request, "search.html", context)
 
+
+
+class DownloadCSVView(View):
+    def get(self, request):
+        file_path = "results.csv"  
+
+        with open(file_path, "rb") as file:
+            response = HttpResponse(file.read(), content_type="text/csv")
+            response["Content-Disposition"] = 'attachment; filename="results.csv"'
+            return response
 
 class LandingView(View):
     def get(self, request):
