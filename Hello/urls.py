@@ -1,7 +1,5 @@
 """
 URL configuration for Hello project.
-this is new yrl.py
-// mnew commit
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/4.2/topics/http/urls/
